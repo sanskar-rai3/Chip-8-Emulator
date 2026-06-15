@@ -252,34 +252,32 @@ void Chip8::OP_Cxkk() {
 // Dxyn
 // DRW Vx, Vy, nibble - display n-byte sprite starting at memory location I at (Vx, Vy), set VF(collision) = 1 if any pixel changes 1 -> 0 else 0
 void Chip8::OP_Dxyn() {
-    uint8_t Vx     = (opcode & 0x0F00u) >> 8u;
-    uint8_t Vy     = (opcode & 0x00F0u) >> 4u;
-    uint8_t height = opcode & 0x000Fu;
-
-    uint8_t xPos = V[Vx] % VIDEO_WIDTH;
-    uint8_t yPos = V[Vy] % VIDEO_HEIGHT;
+    uint8_t xPos = V[(opcode & 0x0F00) >> 8] % VIDEO_WIDTH;
+    uint8_t yPos = V[(opcode & 0x00F0) >> 4] % VIDEO_HEIGHT;
+    uint8_t height = opcode & 0x000F;
 
     V[0xF] = 0;
 
-    for (unsigned int row = 0; row < height; ++row) {
+    for (int row = 0; row < height; row++) {
         uint8_t spriteByte = memory[index + row];
 
-        for (unsigned int col = 0; col < 8; ++col) {
-            uint8_t spritePixel   = spriteByte & (0x80u >> col);
-            uint32_t *screenPixel = &video[((yPos + row)) * VIDEO_WIDTH +
-                                           ((xPos + col))];
+        for (int col = 0; col < 8; col++) {
+            bool spritePixel = spriteByte & (0x80 >> col);
 
             if (spritePixel) {
-                if (*screenPixel != 0) {
-                    V[0xF] = 1;
-                }
-            }
+                uint8_t x = (xPos + col) % VIDEO_WIDTH;
+                uint8_t y = (yPos + row) % VIDEO_HEIGHT;
 
-            *screenPixel ^= 0xFFFFFFFF;
+                uint32_t *pixel = &video[y * VIDEO_WIDTH + x];
+
+                if (*pixel != 0)
+                    V[0xF] = 1;
+
+                *pixel ^= 0xFFFFFFFF;
+            }
         }
     }
 }
-
 
 // 8xy0
 // LD Vx, Vy - set Vx = Vy
