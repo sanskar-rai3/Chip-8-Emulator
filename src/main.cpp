@@ -5,15 +5,17 @@
 #include <iostream>
 #include <chrono>
 
+
 int main(int argc, char *argv[]) {
     if (argc != 4) {
-        std::cerr << "error: Usage: " << argv[0] << " <Scale> <Delay> <ROM Path>\n";
+        std::cerr << "error: Usage: " << argv[0] << " <Scale> <CPU_HZ> <ROM Path>\n";
         std::exit(EXIT_FAILURE);
     }
 
-    int videoScale       = std::stoi(argv[1]);
-    int cycleDelay       = std::stoi(argv[2]);
-    const char *ROM_PATH = argv[3];
+    int videoScale          = std::stoi(argv[1]);
+    const double CHIP8_HZ   = std::stoi(argv[2]);
+    const double cycleDelay = 1.0 / CHIP8_HZ;
+    const char *ROM_PATH    = argv[3];
 
     Platform platform(
         "CHIP-8 Emulator",
@@ -27,22 +29,27 @@ int main(int argc, char *argv[]) {
     chip8.LoadROM(ROM_PATH);
 
     int videoPitch     = sizeof(chip8.video[0]) * VIDEO_WIDTH;
-    auto lastCycleTime = std::chrono::high_resolution_clock::now();
+
+    double accumulator = 0.0;
+    auto lastTime      = std::chrono::high_resolution_clock::now();
 
     bool quit = false;
     while (!quit) {
+        auto currentTime = std::chrono::high_resolution_clock::now();
+
+        double deltaTime = std::chrono::duration<double>(currentTime - lastTime).count();
+
+        lastTime = currentTime;
+        accumulator += deltaTime;
+
         quit = platform.ProcessInput(chip8.keypad);
 
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        double deltaTime = std::chrono::duration<double, std::chrono::microseconds::period>(currentTime - lastCycleTime).count();
-
-        if (deltaTime > cycleDelay) {
-            lastCycleTime = currentTime;
-
-            chip8.Clock();
-
-            platform.Update(chip8.video, videoPitch);
+        while (accumulator >= cycleDelay) {
+            chip8.Clock(); 
+            accumulator -= cycleDelay;
         }
+
+        platform.Update(chip8.video, videoPitch);
     }
 
 	return 0;

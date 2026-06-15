@@ -3,15 +3,15 @@
 #include <cstdint>
 #include <random>
 
-const unsigned int VIDEO_WIDTH  = 64;
-const unsigned int VIDEO_HEIGHT = 32;
+constexpr unsigned int VIDEO_WIDTH  = 64;
+constexpr unsigned int VIDEO_HEIGHT = 32;
 
-const unsigned int START_ADDRESS = 0x200;
+constexpr unsigned int START_ADDRESS = 0x200;
 
-const unsigned int FONT_START_ADDRESS = 0x50;
-const unsigned int FONTSET_SIZE       = 16 * 5;
+constexpr unsigned int FONT_START_ADDRESS = 0x50;
+constexpr unsigned int FONTSET_SIZE       = 16 * 5;
 
-const uint8_t fontset[FONTSET_SIZE] =
+constexpr uint8_t fontset[FONTSET_SIZE] =
 {
 	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
 	0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -54,7 +54,7 @@ public:
 
     Chip8();
 
-    void LoadROM(const char *filename);
+    void LoadROM(const char *filenameexpr);
     void Clock();
 
     void OP_00E0();
