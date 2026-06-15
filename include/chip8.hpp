@@ -54,8 +54,8 @@ public:
 
     Chip8();
 
-    void loadROM(const char *filename);
-    void clock();
+    void LoadROM(const char *filename);
+    void Clock();
 
     void OP_00E0();
     void OP_00EE();

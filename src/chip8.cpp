@@ -23,12 +23,12 @@ Chip8::Chip8() {
     randByte = std::uniform_int_distribution<uint8_t>(0, 255u);
 }
 
-void Chip8::loadROM(const char *filename) {
+void Chip8::LoadROM(const char *filename) {
     std::ifstream file(filename,
          std::ios::binary | std::ios::ate);
 
     if (!file.is_open()) {
-        std::cout << "error: No such file or directory\n";
+        std::cerr << "error: No such file or directory\n";
         std::exit(EXIT_FAILURE);
     }
 
@@ -46,9 +46,9 @@ void Chip8::loadROM(const char *filename) {
     delete[] buffer;
 }
 
-void Chip8::clock() {
+void Chip8::Clock() {
     opcode = (memory[pc] << 8u) | memory[pc + 1];
-    pc += 2;
+    pc    += 2;
 
     switch (opcode & 0xF000u) {
         case 0x0000u: 
