@@ -47,7 +47,73 @@ void Chip8::loadROM(const char *filename) {
 }
 
 void Chip8::clock() {
+    opcode = (memory[pc] << 8u) | memory[pc + 1];
+    pc += 2;
 
+    switch (opcode & 0xF000u) {
+        case 0x0000u: 
+            switch (opcode & 0x000Fu) {
+                case 0x0000u: OP_00E0(); break;
+                case 0x000Eu: OP_00EE(); break;
+            }
+        break;
+
+        case 0x1000u: OP_1nnn(); break;
+        case 0x2000u: OP_2nnn(); break;
+        case 0x3000u: OP_3xkk(); break;
+        case 0x4000u: OP_4xkk(); break;
+        case 0x5000u: OP_5xy0(); break;
+        case 0x6000u: OP_6xkk(); break;
+        case 0x7000u: OP_7xkk(); break;
+        case 0x9000u: OP_9xy0(); break;
+        case 0xA000u: OP_Annn(); break;
+        case 0xB000u: OP_Bnnn(); break;
+        case 0xC000u: OP_Cxkk(); break;
+        case 0xD000u: OP_Dxyn(); break;
+
+        case 0x8000u:
+            switch (opcode & 0x000Fu) {
+                case 0x0000u: OP_8xy0(); break;
+                case 0x0001u: OP_8xy1(); break;
+                case 0x0002u: OP_8xy2(); break;
+                case 0x0003u: OP_8xy3(); break;
+                case 0x0004u: OP_8xy4(); break;
+                case 0x0005u: OP_8xy5(); break;
+                case 0x0006u: OP_8xy6(); break;
+                case 0x0007u: OP_8xy7(); break;
+                case 0x000Eu: OP_8xyE(); break;
+            }
+            break;
+
+        case 0xE000u:
+            switch (opcode & 0x00FFu) {
+                case 0x009E: OP_Ex9E(); break;
+                case 0x00A1: OP_ExA1(); break;
+            }
+            break;
+
+        case 0xF000u:
+            switch (opcode & 0x00FFu) {
+                case 0x0007u: OP_Fx07(); break;
+                case 0x000Au: OP_Fx0A(); break;
+                case 0x0015u: OP_Fx15(); break;
+                case 0x0018u: OP_Fx18(); break;
+                case 0x001Eu: OP_Fx1E(); break;
+                case 0x0029u: OP_Fx29(); break;
+                case 0x0033u: OP_Fx33(); break;
+                case 0x0055u: OP_Fx55(); break;
+                case 0x0065u: OP_Fx65(); break;
+            }
+            break;
+    }
+
+    if (delayTimer > 0) {
+        --delayTimer;
+    }
+
+    if (soundTimer > 0) {
+        --soundTimer;
+    }
 }
 
 
