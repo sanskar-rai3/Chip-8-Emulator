@@ -1,6 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall -Werror 
 INCLUDE=-Iinclude/
+SDL=$(shell pkg-config --cflags --libs sdl2)
 EXE_NAME=main
 
 all: main
@@ -8,7 +9,7 @@ all: main
 
 main: main.o chip8.o render.o
 	@echo "Linking main.o, chip8.o and render.o"
-	$(CC) main.o chip8.o render.o -o $(EXE_NAME)
+	$(CC) main.o chip8.o render.o $(SDL) -o $(EXE_NAME)
 	@echo
 
 main.o:

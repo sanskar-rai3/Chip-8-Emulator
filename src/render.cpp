@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 Platform::Platform(const char *title, int windowWidth, int windowHeight, int textureWidth, int textureHeight) {
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "error: Failed to initialize SDL\n";
         std::exit(EXIT_FAILURE);
     }
@@ -52,7 +52,7 @@ Platform::~Platform() {
     SDL_Quit();
 }
 
-void Platform::Update(void const* buffer, int pitch) {
+void Platform::Update(const void *buffer, int pitch) {
     SDL_UpdateTexture(texture, nullptr, buffer, pitch);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, texture, nullptr, nullptr);

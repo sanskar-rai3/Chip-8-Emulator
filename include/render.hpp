@@ -10,6 +10,6 @@ public:
     Platform(const char *title, int windowWidth, int windowHeight, int textureWidth, int textureHeight);
     ~Platform();
 
-    void Update(void const *buffer, int pitch);
+    void Update(const void *buffer, int pitch);
     bool ProcessInput(uint8_t *keys);
 };
