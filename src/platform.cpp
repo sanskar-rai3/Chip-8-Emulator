@@ -1,10 +1,31 @@
-#include "render.hpp"
+#include "platform.hpp"
 
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
+
+void Platform::AudioCallback(void *userdata, Uint8 *stream, int len) {
+    auto *audio   = (Platform::AudioData *)userdata;
+    float *buffer = (float *)stream;
+    int samples   = len / sizeof(float);
+
+    for (int i = 0; i < samples; ++i) {
+        if (audio->playing) {
+            buffer[i] = std::sin(audio->phase) * 0.2f;
+
+            audio->phase += 2.0 * M_PI * audio->freq / SAMPLE_RATE;
+            if (audio->phase > 2.0 * M_PI) {
+                audio->phase -= 2.0 * M_PI;
+            }
+        }
+        else {
+            buffer[i] = 0;
+        }
+    }
+}
 
 Platform::Platform(const char *title, int windowWidth, int windowHeight, int textureWidth, int textureHeight) {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         std::cerr << "error: Failed to initialize SDL\n";
         std::exit(EXIT_FAILURE);
     }
@@ -43,12 +64,28 @@ Platform::Platform(const char *title, int windowWidth, int windowHeight, int tex
         std::cerr << "error: Failed to create texture\n";
         std::exit(EXIT_FAILURE);
     }
+
+    SDL_AudioSpec spec;
+    SDL_zero(spec);
+
+    spec.freq = SAMPLE_RATE;
+    spec.format = AUDIO_F32SYS;
+    spec.channels = 1;
+    spec.samples = 1024;
+    spec.callback = AudioCallback;
+    spec.userdata = &audio;
+
+    device = SDL_OpenAudioDevice(nullptr, 0, &spec, nullptr, 0);
+    SDL_PauseAudioDevice(device, 0);
 }
 
 Platform::~Platform() {
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
+    SDL_CloseAudioDevice(device);
+
     SDL_DestroyTexture(texture);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+
     SDL_Quit();
 }
 
@@ -120,4 +157,8 @@ bool Platform::ProcessInput(uint8_t *keys) {
     }
 
     return quit;
+}
+
+void Platform::SetSound(bool on) {
+    audio.playing = on;
 }

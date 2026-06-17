@@ -7,9 +7,9 @@ EXE_NAME=main
 all: main
 	@echo "Built successfully"
 
-main: main.o chip8.o render.o
-	@echo "Linking main.o, chip8.o and render.o"
-	$(CC) main.o chip8.o render.o $(SDL) -o $(EXE_NAME)
+main: main.o chip8.o platform.o
+	@echo "Linking main.o, chip8.o and platform.o"
+	$(CC) main.o chip8.o platform.o $(SDL) -o $(EXE_NAME)
 	@echo
 
 main.o:
@@ -22,9 +22,9 @@ chip8.o:
 	$(CC) $(CFLAGS) $(INCLUDE) src/chip8.cpp
 	@echo
 
-render.o:
-	@echo "Compiling chip8.cpp..."
-	$(CC) $(CFLAGS) $(INCLUDE) src/render.cpp
+platform.o:
+	@echo "Compiling platform.cpp..."
+	$(CC) $(CFLAGS) $(INCLUDE) src/platform.cpp
 	@echo
 
 clean:

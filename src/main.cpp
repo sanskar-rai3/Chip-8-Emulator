@@ -1,5 +1,5 @@
 #include "chip8.hpp"
-#include "render.hpp"
+#include "platform.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -43,6 +43,8 @@ int main(int argc, char *argv[]) {
         accumulator += deltaTime;
 
         quit = platform.ProcessInput(chip8.keypad);
+
+        platform.SetSound(chip8.soundTimer > 0);
 
         while (accumulator >= cycleDelay) {
             chip8.Clock(); 

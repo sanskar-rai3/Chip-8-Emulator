@@ -9,7 +9,7 @@ This project emulates the classic CHIP-8 virtual machine and can run many CHIP-8
 ## Features
 
 * Classic CHIP-8 instruction set
-* SDL2-based graphics rendering
+* SDL2-based graphics rendering and audio
 * Keyboard input support
 * Delay timer support
 * ROM loading from file
@@ -88,7 +88,7 @@ A 0 B F       Z X C V
 
 ## Supported Variant
 
-* CHIP-8 (classic)
+* CHIP-8 (classic with audio)
 
 ---
 
@@ -96,7 +96,6 @@ A 0 B F       Z X C V
 
 * SCHIP
 * XO-CHIP
-* Audio output
 
 ---
 
@@ -117,11 +116,3 @@ A 0 B F       Z X C V
 This project is licensed under the MIT License.
 
 Full license text is available in the `LICENSE` file.
-
----
-
-## Author
-
-Sanskar Rai
-
-Github: https://github.com/sanskar-rai3/Chip-8-Emulator
