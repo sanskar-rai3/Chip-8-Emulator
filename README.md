@@ -116,3 +116,15 @@ A 0 B F       Z X C V
 This project is licensed under the MIT License.
 
 Full license text is available in the `LICENSE` file.
+
+---
+
+### ROMs Notice
+
+The ROM files in `roms/` are sourced from:
+https://github.com/kripod/chip8-roms
+
+That repository explicitly allows redistribution of the ROM package in its original form.
+
+These ROMs are not part of this emulator’s MIT license.
+All rights remain with their original authors.

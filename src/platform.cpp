@@ -68,10 +68,10 @@ Platform::Platform(const char *title, int windowWidth, int windowHeight, int tex
     SDL_AudioSpec spec;
     SDL_zero(spec);
 
-    spec.freq = SAMPLE_RATE;
-    spec.format = AUDIO_F32SYS;
+    spec.freq     = SAMPLE_RATE;
+    spec.format   = AUDIO_F32SYS;
     spec.channels = 1;
-    spec.samples = 1024;
+    spec.samples  = 1024;
     spec.callback = AudioCallback;
     spec.userdata = &audio;
 
