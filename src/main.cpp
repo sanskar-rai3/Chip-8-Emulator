@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 
         double deltaTime = std::chrono::duration<double>(currentTime - lastTime).count();
 
-        lastTime = currentTime;
+        lastTime     = currentTime;
         accumulator += deltaTime;
 
         quit = platform.ProcessInput(chip8.keypad);
