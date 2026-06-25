@@ -1,5 +1,6 @@
 #include "platform.hpp"
 
+#include <SDL2/SDL.h>
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
@@ -26,7 +27,7 @@ void Platform::AudioCallback(void *userdata, Uint8 *stream, int len) {
 
 Platform::Platform(const char *title, int windowWidth, int windowHeight, int textureWidth, int textureHeight) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
-        std::cerr << "error: Failed to initialize SDL\n";
+        std::cerr << "error: Failed to initialize SDL: " << SDL_GetError() << '\n';
         std::exit(EXIT_FAILURE);
     }
 
@@ -39,7 +40,8 @@ Platform::Platform(const char *title, int windowWidth, int windowHeight, int tex
         SDL_WINDOW_SHOWN
     );
     if (!window) {
-        std::cerr << "error: Failed to create window\n";
+        std::cerr << "error: Failed to create window: " << SDL_GetError() << '\n';
+	    SDL_Quit();
         std::exit(EXIT_FAILURE);
     }
 
@@ -49,7 +51,9 @@ Platform::Platform(const char *title, int windowWidth, int windowHeight, int tex
         SDL_RENDERER_ACCELERATED
     );
     if (!renderer) {
-        std::cerr << "error: Failed to create renderer\n";
+        std::cerr << "error: Failed to create renderer: " << SDL_GetError() << '\n';
+        SDL_DestroyWindow(window);
+        SDL_Quit();
         std::exit(EXIT_FAILURE);
     }
 
@@ -61,7 +65,10 @@ Platform::Platform(const char *title, int windowWidth, int windowHeight, int tex
         textureHeight
     ); 
     if (!texture) {
-        std::cerr << "error: Failed to create texture\n";
+        std::cerr << "error: Failed to create texture: " << SDL_GetError() << '\n';
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
         std::exit(EXIT_FAILURE);
     }
 
@@ -76,6 +83,14 @@ Platform::Platform(const char *title, int windowWidth, int windowHeight, int tex
     spec.userdata = &audio;
 
     device = SDL_OpenAudioDevice(nullptr, 0, &spec, nullptr, 0);
+    if (device == 0) {
+        std::cerr << "error: Failed to open audio device: " << SDL_GetError() << '\n';
+        SDL_DestroyTexture(texture);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        std::exit(EXIT_FAILURE);
+    }
     SDL_PauseAudioDevice(device, 0);
 }
 

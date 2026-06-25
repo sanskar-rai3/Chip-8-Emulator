@@ -36,7 +36,6 @@ int main(int argc, char *argv[]) {
     bool quit = false;
     while (!quit) {
         auto currentTime = std::chrono::high_resolution_clock::now();
-
         double deltaTime = std::chrono::duration<double>(currentTime - lastTime).count();
 
         lastTime     = currentTime;
