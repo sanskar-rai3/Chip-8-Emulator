@@ -30,6 +30,7 @@ This project emulates the classic CHIP-8 virtual machine and can run many CHIP-8
 
 ```bash
 git clone https://github.com/sanskar-rai3/Chip-8-Emulator
+cd Chip-8-Emulator
 make
 ```
 
