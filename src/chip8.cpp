@@ -424,7 +424,7 @@ void Chip8::OP_Fx0A() {
 
     bool keyPressed = false;
 
-    for (uint8_t i = 0; i < 0xFu; ++i) {
+    for (uint8_t i = 0; i <= 0xFu; ++i) {
         if (keypad[i]) {
             V[Vx] = i;
             keyPressed = true;
