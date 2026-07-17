@@ -9,7 +9,7 @@ all: main
 
 main: main.o chip8.o platform.o
 	@echo "Linking main.o, chip8.o, platform.o, SDL2"
-	$(CXX) $(CXXFLAGS) $(SDL) main.o chip8.o platform.o -o $(TARGET)
+	$(CXX) $(CXXFLAGS) main.o chip8.o platform.o $(SDL) -o $(TARGET)
 	@echo
 
 main.o:
